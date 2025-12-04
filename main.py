@@ -1,6 +1,7 @@
 import pygame, sys
 from input_handler import EventHandler
 from actions import EscapeAction, MovementAction
+from entity import Entity
 
 # game_constants
 
@@ -12,7 +13,7 @@ TILEMAP = pygame.image.load("assets/dejavu10x10_gs_tc.png")  # .convert_alpha()
 
 # glyphs
 PLAYER_GLYPH = pygame.Rect(1, 10, 10, 10)  # position of the glyph in the tilemap
-
+NPC_GLYPH = pygame.Rect(1, 30, 10, 10)  # position of the NPC
 # helpers
 handler = EventHandler()
 
@@ -21,15 +22,18 @@ handler = EventHandler()
 def main():
     # initialization: pygame, game screen, game title
     pygame.init()
-    pygame.key.set_repeat(
-        500, 50
-    )  # enable repeating key presses - 500ms delay, 50ms interval
+    # enable repeating key presses - 500ms delay, 50ms interval
+    pygame.key.set_repeat(500, 50)
+
     screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
     pygame.display.set_caption("Yet Another Roguelike Tutorial (Now in pygame!)")
     clock = pygame.time.Clock()
-    player_x, player_y = int(SCREEN_WIDTH / 2), int(SCREEN_HEIGHT / 2)
 
-    direction = "right"
+    # player instantiate
+    player = Entity(int(SCREEN_WIDTH / 2), int(SCREEN_HEIGHT / 2), "@", (255, 255, 255))
+    npc = Entity(int(SCREEN_WIDTH / 2 - 10), int(SCREEN_HEIGHT / 2), "@", (255, 255, 0))
+    entities = {npc, player}
+
     running = True
     while running:
 
@@ -41,13 +45,20 @@ def main():
             if isinstance(action, EscapeAction):
                 running = False
             elif isinstance(action, MovementAction):
-                player_x += action.dx * TILE_SIZE
-                player_y += action.dy * TILE_SIZE
+                player.move((action.dx * TILE_SIZE), (action.dy * TILE_SIZE))
 
         # 3. update world
         # 4. draw
         screen.fill((0, 0, 0))
-        screen.blit(TILEMAP, (player_x, player_y), PLAYER_GLYPH)
+        screen.blit(TILEMAP, (player.x, player.y), PLAYER_GLYPH)
+        screen.blit(
+            TILEMAP,
+            (
+                npc.x,
+                npc.y,
+            ),
+            NPC_GLYPH,
+        )
         pygame.display.flip()
         # pygame.display.update()  # update specific regions
         clock.tick(FPS)
