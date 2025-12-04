@@ -12,8 +12,8 @@ FPS = 30
 TILEMAP = pygame.image.load("assets/dejavu10x10_gs_tc.png")  # .convert_alpha()
 
 # glyphs
-PLAYER_GLYPH = pygame.Rect(1, 10, 10, 10)  # position of the glyph in the tilemap
-NPC_GLYPH = pygame.Rect(1, 30, 10, 10)  # position of the NPC
+sprite_dict = {"player": pygame.Rect(1, 10, 10, 10), "npc": pygame.Rect(1, 30, 10, 10)}
+
 # helpers
 handler = EventHandler()
 
@@ -30,8 +30,12 @@ def main():
     clock = pygame.time.Clock()
 
     # player instantiate
-    player = Entity(int(SCREEN_WIDTH / 2), int(SCREEN_HEIGHT / 2), "@", (255, 255, 255))
-    npc = Entity(int(SCREEN_WIDTH / 2 - 10), int(SCREEN_HEIGHT / 2), "@", (255, 255, 0))
+    player = Entity(
+        int(SCREEN_WIDTH / 2), int(SCREEN_HEIGHT / 2), sprite_dict["player"], None
+    )
+    npc = Entity(
+        int(SCREEN_WIDTH / 2 - 10), int(SCREEN_HEIGHT / 2), sprite_dict["npc"], None
+    )
     entities = {npc, player}
 
     running = True
@@ -50,14 +54,14 @@ def main():
         # 3. update world
         # 4. draw
         screen.fill((0, 0, 0))
-        screen.blit(TILEMAP, (player.x, player.y), PLAYER_GLYPH)
+        screen.blit(TILEMAP, (player.x, player.y), sprite_dict["player"])
         screen.blit(
             TILEMAP,
             (
                 npc.x,
                 npc.y,
             ),
-            NPC_GLYPH,
+            sprite_dict["npc"],
         )
         pygame.display.flip()
         # pygame.display.update()  # update specific regions

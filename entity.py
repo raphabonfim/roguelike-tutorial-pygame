@@ -3,10 +3,10 @@ class Entity:
     A generic object to represent players, enemies, items, etc
     """
 
-    def __init__(self, x: int, y: int, glyph: str, color: tuple[int, int, int]):
+    def __init__(self, x: int, y: int, sprite, color):
         self.x = x
         self.y = y
-        self.glyph = glyph
+        self.sprite = sprite
         self.color = color
 
     def move(self, dx: int, dy: int):
