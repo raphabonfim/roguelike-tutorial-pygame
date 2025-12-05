@@ -1,21 +1,18 @@
 import pygame, sys
+
 from input_handler import EventHandler
 from actions import EscapeAction, MovementAction
 from entity import Entity
+from engine import Engine
 
 # game_constants
-
 SCREEN_WIDTH = 1280
 SCREEN_HEIGHT = 800
-TILE_SIZE = 10
 FPS = 30
 TILEMAP = pygame.image.load("assets/dejavu10x10_gs_tc.png")  # .convert_alpha()
 
-# glyphs
+# glyphs and sprites
 sprite_dict = {"player": pygame.Rect(1, 10, 10, 10), "npc": pygame.Rect(1, 30, 10, 10)}
-
-# helpers
-handler = EventHandler()
 
 
 # game loop
@@ -36,35 +33,19 @@ def main():
     npc = Entity(
         int(SCREEN_WIDTH / 2 - 10), int(SCREEN_HEIGHT / 2), sprite_dict["npc"], None
     )
+
     entities = {npc, player}
+    event_handler = EventHandler()
+    engine = Engine(entities, event_handler, player)
 
     running = True
     while running:
 
-        # 1. event handling
-        action = handler.handle_events()
+        # 1. event handling & player input
+        engine.handle_events()
 
-        # 2. player input
-        if action:
-            if isinstance(action, EscapeAction):
-                running = False
-            elif isinstance(action, MovementAction):
-                player.move((action.dx * TILE_SIZE), (action.dy * TILE_SIZE))
-
-        # 3. update world
-        # 4. draw
-        screen.fill((0, 0, 0))
-        screen.blit(TILEMAP, (player.x, player.y), sprite_dict["player"])
-        screen.blit(
-            TILEMAP,
-            (
-                npc.x,
-                npc.y,
-            ),
-            sprite_dict["npc"],
-        )
-        pygame.display.flip()
-        # pygame.display.update()  # update specific regions
+        # 2. update world & draw
+        engine.render(screen, TILEMAP)
         clock.tick(FPS)
 
 
