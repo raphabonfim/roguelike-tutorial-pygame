@@ -1,9 +1,9 @@
 import pygame
+from constants import *
+
 from actions import EscapeAction, MovementAction
 from entity import Entity
 from input_handler import EventHandler
-
-TILE_SIZE = 10
 
 
 class Engine:

@@ -1,15 +1,10 @@
 import pygame, sys
+from constants import *
 
 from input_handler import EventHandler
 from actions import EscapeAction, MovementAction
 from entity import Entity
 from engine import Engine
-
-# game_constants
-SCREEN_WIDTH = 1280
-SCREEN_HEIGHT = 800
-FPS = 30
-TILEMAP = pygame.image.load("assets/dejavu10x10_gs_tc.png")  # .convert_alpha()
 
 # glyphs and sprites
 sprite_dict = {"player": pygame.Rect(1, 10, 10, 10), "npc": pygame.Rect(1, 30, 10, 10)}
